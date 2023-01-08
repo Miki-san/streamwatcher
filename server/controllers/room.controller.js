@@ -2,6 +2,8 @@ const db = require("../models");
 const Room = db.rooms;
 const Op = db.Sequelize.Op;
 const utils = require("../utils")
+
+
 exports.create = (req, res) => {
     if (!req.body.created_by) {
         res.status(400).send({
@@ -13,7 +15,8 @@ exports.create = (req, res) => {
     const room = {
         room_id: utils.makeid(6),
         created_by: req.body.created_by,
-        pwd_hash: req.body.password ? req.body.password.hashCode() : null
+        pwd_hash: req.body.password ? req.body.password.hashCode() : null,
+        max_guests: req.body.max_guests
     };
 
     Room.create(room)

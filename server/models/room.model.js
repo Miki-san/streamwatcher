@@ -12,7 +12,16 @@ module.exports = (sequelize, Sequelize) => {
         },
         pwd_hash: {
             type: Sequelize.STRING
+        },
+        file_path: {
+            type: Sequelize.STRING
         }
     });
+
+    (async () => {
+        await sequelize.sync({ force: true });
+        // Code here
+    })();
     return Room;
 };
+

@@ -1,0 +1,22 @@
+.CreateRoom {
+    height:100%;
+    width:100%;
+    display:flex;
+    justify-content: center;
+
+}
+.roomForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    flex-direction: column;
+    width: 200px;
+    padding: 10px;
+    margin: 0 auto;
+}
+
+input{
+    width: 100%;
+    margin-top: 5px;
+}
