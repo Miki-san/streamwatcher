@@ -1,12 +1,11 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const cors = require("cors");
 const utils = require("./utils")
+const db = require("./models");
+const multer = require("multer")
 
 const app = express();
 
-const db = require("./models");
 db.sequelize.sync()
     .then(() => {
         console.log("Synced db.");
@@ -20,17 +19,15 @@ let corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// parse requests of content-type - application/json
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+
 
 require("./routes/room.router")(app);
 
 app.get('/video', (req, res) => {
-    res.sendFile('assets/video.mp4', { root: __dirname });
+    res.sendFile('assets/video.mp4', {root: __dirname});
 });
 
 app.listen(4000, () => {

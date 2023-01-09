@@ -2,6 +2,7 @@ const db = require("../models");
 const Room = db.rooms;
 const Op = db.Sequelize.Op;
 const utils = require("../utils")
+const multer = require("multer");
 
 
 exports.create = (req, res) => {
@@ -79,7 +80,7 @@ exports.delete = (req, res) => {
     const id = req.params.room_id;
 
     Room.destroy({
-        where: { room_id: id }
+        where: {room_id: id}
     })
         .then(num => {
             if (num == 1) {
@@ -94,7 +95,14 @@ exports.delete = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Room with id=" + id + "\n"+err
+                message: "Could not delete Room with id=" + id + "\n" + err
             });
         });
 };
+
+exports.uploadFile = (req, res) => {
+
+    const id = req.params.room_id;
+    //file.mv('./upload/' + id + "/" + file.originalname)
+    res.send("sasdas")
+}
