@@ -18,10 +18,10 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    (async () => {
-        await sequelize.sync({ force: true });
-        // Code here
-    })();
+    // (async () => {
+    //     await sequelize.sync({ force: true });
+    //     // Code here
+    // })();
     return Room;
 };
 

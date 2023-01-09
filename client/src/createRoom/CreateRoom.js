@@ -13,6 +13,7 @@ function CreateRoom() {
 
     const onSubmit = (e) => {
         e.preventDefault()
+        console.log(roomData)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
