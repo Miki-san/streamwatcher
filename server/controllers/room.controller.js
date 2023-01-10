@@ -3,7 +3,8 @@ const Room = db.rooms;
 const Op = db.Sequelize.Op;
 const utils = require("../utils")
 const multer = require("multer");
-
+const fs = require("fs")
+const path = require("path")
 
 exports.create = (req, res) => {
     if (!req.body.created_by) {
@@ -101,8 +102,81 @@ exports.delete = (req, res) => {
 };
 
 exports.uploadFile = (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({msg: "No file uploaded"});
+    }
+    return res.status(200).json({
+        msg: "Upload successful",
+        filename: req.file.originalname
+    })
+}
 
-    const id = req.params.room_id;
-    //file.mv('./upload/' + id + "/" + file.originalname)
-    res.send("sasdas")
+exports.getFiles = (req, res) => {
+    let id = req.params.room_id
+    let path = `./uploads/${id}/`
+    if (fs.existsSync(path)) {
+        fs.readdir(path, (err, files) => {
+            return res.json({
+                status: "success",
+                file_count: files.length,
+                file_names: files
+            })
+        });
+    } else {
+        res.status(404).json({
+            status: "failure",
+            msg: "Room not found"
+        })
+    }
+}
+
+exports.selectFile = (req, res) => {
+    let id = req.params.room_id
+    let filename = req.body.filename
+    console.log(`./uploads/${id}/${filename}`)
+    if (!filename || !fs.existsSync(`./uploads/${id}/${filename}`)) {
+        return res.status(400).json({
+            status: "failure",
+            msg: "File not specified or does not exist"
+        })
+    }
+    Room.update({file_path: filename}, {
+        where: {room_id: id}
+    })
+        .then(num => {
+            if (num[0] === 1) {
+                res.send({
+                    msg: "File selected successfully"
+                });
+            } else {
+                res.send({
+                    msg: `Cannot update Room with id=${id}. Maybe Room was not found or req.body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating Room with id=" + id
+            })
+        })
+
+}
+
+exports.video = (req, res) => {
+    let id = req.params.room_id
+    Room.findByPk(id)
+        .then(data => {
+            if (data) {
+                res.sendFile(path.resolve(`uploads/${id}/${data.get("file_path")}`), {acceptRanges: false});
+            } else {
+                res.status(404).send({
+                    message: `Cannot find Room with id=${id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving room with id=" + id
+            });
+        });
 }

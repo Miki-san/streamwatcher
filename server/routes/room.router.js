@@ -23,7 +23,9 @@ module.exports = app => {
     router.get("/:room_id", tutorials.findOne);
     router.put("/update/:room_id", tutorials.create);
     router.post("/upload/:room_id", upload.single("video"), tutorials.uploadFile);
-
+    router.get("/getFiles/:room_id", tutorials.getFiles);
+    router.put("/selectFile/:room_id", tutorials.selectFile);
+    router.get("/:room_id/video", tutorials.video);
 
     app.use('/api/rooms', router);
 };
